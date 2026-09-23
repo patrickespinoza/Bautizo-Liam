@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -11,11 +11,8 @@ import {
   UserRound,
 } from "lucide-react";
 
-/*
-  Esta misma clave deberá utilizarse posteriormente
-  en la invitación para desencriptar la información.
-*/
-const CLAVE_SECRETA = "Liam-Samuel-Chapa-Garabito-2026";
+const CLAVE_SECRETA =
+  "Liam-Samuel-Chapa-Garabito-2026";
 
 const convertirABase64URL = (bytes) => {
   let binario = "";
@@ -61,10 +58,6 @@ const crearIdEncriptado = async (
   const codificador = new TextEncoder();
   const clave = await obtenerClaveEncriptacion();
 
-  /*
-    AES-GCM necesita un vector de inicialización.
-    Se genera uno nuevo para cada invitación.
-  */
   const iv = window.crypto.getRandomValues(
     new Uint8Array(12)
   );
@@ -83,10 +76,6 @@ const crearIdEncriptado = async (
     informacionEncriptada
   );
 
-  /*
-    Guardamos juntos el IV y la información encriptada
-    para poder desencriptarlos desde la invitación.
-  */
   const resultado = new Uint8Array(
     iv.length + datosEncriptados.length
   );
@@ -98,6 +87,8 @@ const crearIdEncriptado = async (
 };
 
 const Generador = () => {
+  const resultadoRef = useRef(null);
+
   const [nombre, setNombre] = useState("");
   const [pases, setPases] = useState("1");
 
@@ -110,6 +101,25 @@ const Generador = () => {
   const [linkCopiado, setLinkCopiado] = useState(false);
   const [mensajeCopiado, setMensajeCopiado] =
     useState(false);
+
+  useEffect(() => {
+    if (!link || !resultadoRef.current) return;
+
+    /*
+      En celular lleva suavemente al usuario
+      hasta el enlace recién generado.
+    */
+    const temporizador = window.setTimeout(() => {
+      if (window.innerWidth < 1024) {
+        resultadoRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 200);
+
+    return () => window.clearTimeout(temporizador);
+  }, [link]);
 
   const limpiarResultado = () => {
     setLink("");
@@ -223,29 +233,31 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
         relative
         min-h-screen
         w-full
-        overflow-hidden
+        max-w-full
+        overflow-x-hidden
         bg-gradient-to-b
         from-[#DCECF5]
         via-[#F8F3EA]
         to-[#EEF5F8]
-        px-4
-        py-10
+        px-3
+        py-8
         text-[#294A62]
         sm:px-6
-        sm:py-14
+        sm:py-12
         lg:px-10
+        lg:py-14
       "
     >
-      {/* Nubes decorativas */}
+      {/* Fondos decorativos */}
       <div
         aria-hidden="true"
         className="
           pointer-events-none
           absolute
-          -left-32
+          -left-40
           -top-32
           h-96
-          w-[32rem]
+          w-96
           rounded-full
           bg-white/75
           blur-3xl
@@ -257,7 +269,7 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
         className="
           pointer-events-none
           absolute
-          -right-32
+          -right-40
           top-1/3
           h-96
           w-96
@@ -267,22 +279,7 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
         "
       />
 
-      <div
-        aria-hidden="true"
-        className="
-          pointer-events-none
-          absolute
-          -bottom-32
-          left-1/4
-          h-80
-          w-[32rem]
-          rounded-full
-          bg-white/75
-          blur-3xl
-        "
-      />
-
-      <div className="relative z-10">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         {/* Encabezado */}
         <motion.header
           initial={{ opacity: 0, y: 25 }}
@@ -293,17 +290,20 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
           }}
           className="
             mx-auto
-            mb-10
+            mb-8
+            w-full
             max-w-3xl
+            px-2
             text-center
+            sm:mb-10
           "
         >
           <div
             className="
               mx-auto
               flex
-              h-16
-              w-16
+              h-14
+              w-14
               items-center
               justify-center
               rounded-full
@@ -312,19 +312,26 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
               bg-white/70
               text-[#6690A8]
               shadow-[0_12px_30px_rgba(65,104,127,0.14)]
+              sm:h-16
+              sm:w-16
             "
           >
-            <Sparkles size={28} strokeWidth={1.4} />
+            <Sparkles
+              size={26}
+              strokeWidth={1.4}
+            />
           </div>
 
           <p
             className="
-              mt-6
+              mt-5
               font-playfair
-              text-xs
+              text-[10px]
               uppercase
-              tracking-[0.35em]
+              tracking-[0.25em]
               text-[#78909E]
+              sm:text-xs
+              sm:tracking-[0.35em]
             "
           >
             Bautizo de Liam Samuel
@@ -333,9 +340,11 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
           <h1
             className="
               mt-4
+              break-words
               font-playfair
-              text-4xl
+              text-3xl
               font-medium
+              leading-tight
               text-[#294A62]
               sm:text-5xl
               lg:text-6xl
@@ -344,10 +353,10 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
             Generador de invitaciones
           </h1>
 
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <span className="h-px w-12 bg-[#B8A98F]" />
-            <span className="text-xl text-[#A99576]">✦</span>
-            <span className="h-px w-12 bg-[#B8A98F]" />
+          <div className="mt-5 flex items-center justify-center gap-3">
+            <span className="h-px w-10 bg-[#B8A98F]" />
+            <span className="text-lg text-[#A99576]">✦</span>
+            <span className="h-px w-10 bg-[#B8A98F]" />
           </div>
 
           <p
@@ -356,10 +365,11 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
               mt-5
               max-w-xl
               font-playfair
-              text-base
-              leading-7
+              text-sm
+              leading-6
               text-[#5D7380]
               sm:text-lg
+              sm:leading-7
             "
           >
             Personaliza el nombre y los lugares reservados
@@ -367,41 +377,46 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
           </p>
         </motion.header>
 
-        {/* Contenido */}
+        {/* Grid principal */}
         <div
           className="
-            mx-auto
             grid
-            max-w-6xl
+            w-full
+            min-w-0
+            grid-cols-1
             items-start
             gap-8
-            lg:grid-cols-[0.95fr_1.05fr]
+            lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]
             lg:gap-10
           "
         >
-          {/* Formulario */}
+          {/* Formulario primero en celular */}
           <motion.section
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -25 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
               duration: 0.8,
               delay: 0.1,
             }}
             className="
-              order-2
+              order-1
+              w-full
+              min-w-0
+              max-w-full
               overflow-hidden
-              rounded-[2rem]
+              rounded-[1.75rem]
               border
               border-white
               bg-[#FFFDF8]/90
               shadow-[0_24px_65px_rgba(55,86,105,0.16)]
               backdrop-blur-xl
-              lg:order-1
+              sm:rounded-[2rem]
             "
           >
             <div
               className="
                 h-2
+                w-full
                 bg-gradient-to-r
                 from-[#BEDAE9]
                 via-[#6D99B2]
@@ -409,13 +424,24 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
               "
             />
 
-            <div className="p-6 sm:p-8">
+            <div
+              className="
+                w-full
+                min-w-0
+                max-w-full
+                p-4
+                sm:p-7
+                md:p-8
+              "
+            >
               <p
                 className="
-                  text-xs
+                  text-[10px]
                   uppercase
-                  tracking-[0.28em]
+                  tracking-[0.22em]
                   text-[#78909E]
+                  sm:text-xs
+                  sm:tracking-[0.28em]
                 "
               >
                 Datos del invitado
@@ -425,15 +451,16 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                 className="
                   mt-3
                   font-playfair
-                  text-3xl
+                  text-2xl
                   text-[#294A62]
+                  sm:text-3xl
                 "
               >
                 Crear invitación
               </h2>
 
               {/* Nombre */}
-              <div className="mt-8">
+              <div className="mt-7 w-full min-w-0">
                 <label
                   htmlFor="nombreInvitado"
                   className="
@@ -446,8 +473,14 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                     text-[#536C7A]
                   "
                 >
-                  <UserRound size={17} />
-                  Nombre del invitado o familia
+                  <UserRound
+                    size={17}
+                    className="shrink-0"
+                  />
+
+                  <span className="min-w-0">
+                    Nombre del invitado o familia
+                  </span>
                 </label>
 
                 <input
@@ -461,27 +494,33 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                     limpiarResultado();
                   }}
                   className="
+                    block
                     w-full
+                    min-w-0
+                    max-w-full
                     rounded-2xl
                     border
                     border-[#B9CFDB]
                     bg-white
-                    px-5
+                    px-4
                     py-4
                     font-playfair
+                    text-base
                     text-[#294A62]
                     outline-none
                     transition
+                    placeholder:text-sm
                     placeholder:text-[#78909E]/55
                     focus:border-[#6695B2]
                     focus:ring-2
                     focus:ring-[#8DB5CA]/30
+                    sm:px-5
                   "
                 />
               </div>
 
               {/* Lugares */}
-              <div className="mt-5">
+              <div className="mt-5 w-full min-w-0">
                 <label
                   htmlFor="numeroPases"
                   className="
@@ -494,7 +533,10 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                     text-[#536C7A]
                   "
                 >
-                  <TicketCheck size={17} />
+                  <TicketCheck
+                    size={17}
+                    className="shrink-0"
+                  />
                   Número de lugares
                 </label>
 
@@ -509,29 +551,38 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                     limpiarResultado();
                   }}
                   className="
+                    block
                     w-full
+                    min-w-0
+                    max-w-full
                     rounded-2xl
                     border
                     border-[#B9CFDB]
                     bg-white
-                    px-5
+                    px-4
                     py-4
                     font-playfair
+                    text-base
                     text-[#294A62]
                     outline-none
                     transition
                     focus:border-[#6695B2]
                     focus:ring-2
                     focus:ring-[#8DB5CA]/30
+                    sm:px-5
                   "
                 />
               </div>
 
               {error && (
-                <p
+                <motion.p
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
                   role="alert"
                   className="
                     mt-5
+                    max-w-full
+                    break-words
                     rounded-xl
                     border
                     border-[#D6ABAB]
@@ -539,11 +590,12 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                     px-4
                     py-3
                     text-sm
+                    leading-5
                     text-[#874B4B]
                   "
                 >
                   {error}
-                </p>
+                </motion.p>
               )}
 
               {/* Generar */}
@@ -561,21 +613,25 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                   mt-7
                   flex
                   w-full
+                  min-w-0
                   items-center
                   justify-center
                   gap-2
                   rounded-full
                   bg-[#6695B2]
-                  px-6
+                  px-4
                   py-4
+                  text-center
                   font-playfair
-                  text-base
+                  text-sm
                   text-white
                   shadow-[0_14px_32px_rgba(71,115,141,0.27)]
                   transition-colors
                   hover:bg-[#4F7F9B]
                   disabled:cursor-not-allowed
                   disabled:opacity-65
+                  sm:px-6
+                  sm:text-base
                 "
               >
                 {generando ? (
@@ -584,6 +640,7 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                       className="
                         h-5
                         w-5
+                        shrink-0
                         animate-spin
                         rounded-full
                         border-2
@@ -591,22 +648,32 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                         border-t-white
                       "
                     />
-                    Encriptando invitación
+                    <span>Encriptando invitación</span>
                   </>
                 ) : (
                   <>
-                    <ShieldCheck size={20} />
-                    Generar invitación
+                    <ShieldCheck
+                      size={20}
+                      className="shrink-0"
+                    />
+                    <span>Generar invitación</span>
                   </>
                 )}
               </motion.button>
 
-              {/* Enlace */}
+              {/* Resultado generado */}
               {link && (
                 <motion.div
+                  ref={resultadoRef}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-8"
+                  className="
+                    mt-8
+                    w-full
+                    min-w-0
+                    max-w-full
+                    scroll-mt-5
+                  "
                 >
                   <p
                     className="
@@ -614,27 +681,39 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                       flex
                       items-center
                       gap-2
-                      text-xs
+                      text-[10px]
                       uppercase
-                      tracking-[0.2em]
+                      tracking-[0.15em]
                       text-[#718995]
+                      sm:text-xs
+                      sm:tracking-[0.2em]
                     "
                   >
-                    <Link2 size={16} />
+                    <Link2
+                      size={16}
+                      className="shrink-0"
+                    />
                     Enlace personalizado
                   </p>
 
                   <div
                     className="
+                      block
+                      w-full
+                      min-w-0
+                      max-w-full
+                      overflow-hidden
                       break-all
                       rounded-2xl
                       border
                       border-[#C1D3DD]
                       bg-[#EDF5F8]
-                      p-4
-                      text-xs
+                      p-3
+                      text-[11px]
                       leading-5
                       text-[#405E6F]
+                      sm:p-4
+                      sm:text-xs
                     "
                   >
                     {link}
@@ -655,7 +734,7 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                       rounded-full
                       border
                       border-[#7FA4B8]
-                      px-5
+                      px-4
                       py-3
                       text-sm
                       text-[#486D82]
@@ -675,132 +754,160 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                       </>
                     )}
                   </button>
-                </motion.div>
-              )}
 
-              {/* Mensaje editable */}
-              {link && (
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="
-                    mt-8
-                    border-t
-                    border-[#C7D8E1]
-                    pt-7
-                  "
-                >
-                  <p
+                  {/* Mensaje editable */}
+                  <div
                     className="
-                      flex
-                      items-center
-                      gap-2
-                      text-xs
-                      uppercase
-                      tracking-[0.2em]
-                      text-[#718995]
+                      mt-8
+                      w-full
+                      min-w-0
+                      max-w-full
+                      border-t
+                      border-[#C7D8E1]
+                      pt-7
                     "
                   >
-                    <MessageCircle size={16} />
-                    Mensaje para WhatsApp
-                  </p>
+                    <p
+                      className="
+                        flex
+                        items-center
+                        gap-2
+                        text-[10px]
+                        uppercase
+                        tracking-[0.15em]
+                        text-[#718995]
+                        sm:text-xs
+                        sm:tracking-[0.2em]
+                      "
+                    >
+                      <MessageCircle
+                        size={16}
+                        className="shrink-0"
+                      />
+                      Mensaje para WhatsApp
+                    </p>
 
-                  <p className="mt-2 text-sm text-[#748993]">
-                    Puedes editarlo antes de copiarlo.
-                  </p>
+                    <p
+                      className="
+                        mt-2
+                        text-sm
+                        leading-5
+                        text-[#748993]
+                      "
+                    >
+                      Puedes editarlo antes de copiarlo.
+                    </p>
 
-                  <textarea
-                    value={mensaje}
-                    onChange={(event) => {
-                      setMensaje(event.target.value);
-                      setMensajeCopiado(false);
-                    }}
-                    rows={15}
-                    className="
-                      mt-4
-                      w-full
-                      resize-y
-                      rounded-2xl
-                      border
-                      border-[#B9CFDB]
-                      bg-white
-                      p-4
-                      text-sm
-                      leading-6
-                      text-[#294A62]
-                      outline-none
-                      focus:border-[#6695B2]
-                      focus:ring-2
-                      focus:ring-[#8DB5CA]/30
-                    "
-                  />
+                    <textarea
+                      value={mensaje}
+                      onChange={(event) => {
+                        setMensaje(event.target.value);
+                        setMensajeCopiado(false);
+                      }}
+                      rows={16}
+                      spellCheck="true"
+                      className="
+                        mt-4
+                        block
+                        min-h-[360px]
+                        w-full
+                        min-w-0
+                        max-w-full
+                        resize-y
+                        whitespace-pre-wrap
+                        break-words
+                        rounded-2xl
+                        border
+                        border-[#B9CFDB]
+                        bg-white
+                        p-4
+                        text-sm
+                        leading-6
+                        text-[#294A62]
+                        outline-none
+                        focus:border-[#6695B2]
+                        focus:ring-2
+                        focus:ring-[#8DB5CA]/30
+                        sm:min-h-[390px]
+                      "
+                    />
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      copiarTexto(
-                        mensaje,
-                        setMensajeCopiado
-                      )
-                    }
-                    className="
-                      mt-3
-                      flex
-                      w-full
-                      items-center
-                      justify-center
-                      gap-2
-                      rounded-full
-                      bg-[#395F76]
-                      px-6
-                      py-4
-                      font-playfair
-                      text-base
-                      text-white
-                      transition
-                      hover:bg-[#294C61]
-                    "
-                  >
-                    {mensajeCopiado ? (
-                      <>
-                        <Check size={18} />
-                        Mensaje copiado
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={17} />
-                        Copiar mensaje de WhatsApp
-                      </>
-                    )}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        copiarTexto(
+                          mensaje,
+                          setMensajeCopiado
+                        )
+                      }
+                      className="
+                        mt-3
+                        flex
+                        w-full
+                        items-center
+                        justify-center
+                        gap-2
+                        rounded-full
+                        bg-[#395F76]
+                        px-4
+                        py-4
+                        text-center
+                        font-playfair
+                        text-sm
+                        text-white
+                        transition
+                        hover:bg-[#294C61]
+                        sm:px-6
+                        sm:text-base
+                      "
+                    >
+                      {mensajeCopiado ? (
+                        <>
+                          <Check size={18} />
+                          Mensaje copiado
+                        </>
+                      ) : (
+                        <>
+                          <Copy size={17} />
+                          Copiar mensaje de WhatsApp
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </div>
           </motion.section>
 
-          {/* Portada y vista previa */}
+          {/* Fotografía y vista previa */}
           <motion.section
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 25 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
               duration: 0.8,
               delay: 0.2,
             }}
             className="
-              order-1
+              order-2
               flex
+              w-full
+              min-w-0
+              max-w-full
               flex-col
               items-center
-              lg:order-2
+              lg:sticky
+              lg:top-8
             "
           >
             <div className="mb-5 text-center">
               <p
                 className="
-                  text-xs
+                  text-[10px]
                   uppercase
-                  tracking-[0.3em]
+                  tracking-[0.25em]
                   text-[#78909E]
+                  sm:text-xs
+                  sm:tracking-[0.3em]
                 "
               >
                 Invitación
@@ -822,15 +929,16 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
             <div
               className="
                 w-full
+                min-w-0
                 max-w-[430px]
                 overflow-hidden
-                rounded-[2rem]
-                border-[8px]
+                rounded-[1.75rem]
+                border-[6px]
                 border-white
                 bg-white
                 shadow-[0_25px_65px_rgba(46,78,98,0.18)]
-                lg:sticky
-                lg:top-8
+                sm:rounded-[2rem]
+                sm:border-[8px]
               "
             >
               <img
@@ -838,7 +946,8 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                 alt="Portada del bautizo de Liam Samuel"
                 className="
                   block
-                  max-h-[650px]
+                  aspect-[4/5]
+                  h-auto
                   w-full
                   object-cover
                   object-center
@@ -854,6 +963,7 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                 className="
                   mt-10
                   w-full
+                  min-w-0
                   max-w-[430px]
                 "
               >
@@ -861,10 +971,12 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                   className="
                     mb-3
                     text-center
-                    text-xs
+                    text-[10px]
                     uppercase
-                    tracking-[0.25em]
+                    tracking-[0.2em]
                     text-[#718995]
+                    sm:text-xs
+                    sm:tracking-[0.25em]
                   "
                 >
                   Vista previa del mensaje
@@ -872,31 +984,42 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
 
                 <div
                   className="
-                    rounded-[1.75rem]
+                    w-full
+                    min-w-0
+                    overflow-hidden
+                    rounded-[1.5rem]
                     bg-[#E8E3DA]
-                    p-4
+                    p-3
                     shadow-[0_15px_40px_rgba(44,73,91,0.12)]
+                    sm:rounded-[1.75rem]
+                    sm:p-4
                   "
                 >
                   <div
                     className="
                       ml-auto
+                      w-full
+                      min-w-0
                       max-w-[94%]
+                      overflow-hidden
                       rounded-2xl
                       rounded-tr-sm
                       bg-[#D9FDD3]
-                      px-4
+                      px-3
                       py-3
                       shadow-sm
+                      sm:px-4
                     "
                   >
                     <p
                       className="
+                        max-w-full
                         whitespace-pre-wrap
                         break-words
-                        text-[13px]
+                        text-[12px]
                         leading-5
                         text-[#1D2733]
+                        sm:text-[13px]
                       "
                     >
                       {mensaje}
@@ -906,8 +1029,9 @@ Esperamos contar con tu presencia y compartir juntos este momento lleno de amor 
                       className="
                         mt-1
                         text-right
-                        text-[10px]
+                        text-[9px]
                         text-black/40
+                        sm:text-[10px]
                       "
                     >
                       12:00 ✓✓
