@@ -19,9 +19,12 @@ export default function Intinerario() {
 
       <Contador />
 
+      <Celebracion/>
+      
       <Itinerario/>
 
       <PadresYPadrinos/>
+
 
       <Galeria/>
 
