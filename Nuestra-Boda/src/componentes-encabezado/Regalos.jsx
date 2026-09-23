@@ -1,165 +1,272 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
+import { Gift } from "lucide-react";
 
 const Regalos = () => {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [copiado, setCopiado] = useState(false);
-
-  const copiarCuenta = () => {
-    navigator.clipboard.writeText("1234 5678 9012 3456");
-    setCopiado(true);
-
-    setTimeout(() => {
-      setCopiado(false);
-    }, 2000);
-  };
-
   return (
-    <section className="w-full bg-[#F4E8DD] py-24 px-5 overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9 }}
-        viewport={{ once: true }}
+    <section
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#F8F3EA]
+        px-5
+        py-20
+        sm:px-8
+        sm:py-24
+        md:py-28
+      "
+    >
+      {/* Decoraciones de fondo */}
+      <div
+        aria-hidden="true"
         className="
-          max-w-5xl mx-auto
-          bg-white/70
-          backdrop-blur-xl
-          rounded-tl-[4rem]
-          rounded-br-[4rem]
-          rounded-tr-2xl
-          rounded-bl-2xl
-          border border-[#B88A8A]/30
-          shadow-[0_25px_70px_rgba(74,20,29,.18)]
+          pointer-events-none
+          absolute
+          -left-28
+          -top-24
+          h-80
+          w-96
+          rounded-full
+          bg-[#D8EAF4]/70
+          blur-3xl
+        "
+      />
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          -right-24
+          bottom-0
+          h-96
+          w-96
+          rounded-full
+          bg-[#C8DFEC]/55
+          blur-3xl
+        "
+      />
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          bottom-[-8rem]
+          left-1/3
+          h-72
+          w-[30rem]
+          rounded-full
+          bg-white/75
+          blur-3xl
+        "
+      />
+
+      {/* Tarjeta principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 45 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        viewport={{ once: true, amount: 0.25 }}
+        className="
+          relative
+          z-10
+          mx-auto
+          max-w-4xl
           overflow-hidden
+          rounded-[2.5rem]
+          border
+          border-white
+          bg-white/75
+          shadow-[0_25px_70px_rgba(62,91,109,0.16)]
+          backdrop-blur-xl
         "
       >
-        <div className="px-8 py-16 sm:px-14 text-center">
-          <p className="uppercase tracking-[.35em] text-[#B88A8A] text-sm font-semibold">
-            Con cariño
-          </p>
+        {/* Franja superior */}
+        <div
+          aria-hidden="true"
+          className="
+            h-2
+            w-full
+            bg-gradient-to-r
+            from-[#BEDAE9]
+            via-[#729DB7]
+            to-[#BEDAE9]
+          "
+        />
 
-          <h2 className="font-playfair text-[#4A141D] text-5xl mt-4">
-            Regalos
-          </h2>
-
-          <div className="w-24 h-px bg-[#B88A8A] mx-auto mt-6"></div>
-
-          <motion.img
-            whileHover={{ scale: 1.05, rotate: 3 }}
-            transition={{ duration: 0.3 }}
-            src="/regalo1.png"
-            alt="Regalo"
-            className="w-28 mx-auto mt-12"
+        <div
+          className="
+            relative
+            px-6
+            py-14
+            text-center
+            sm:px-12
+            sm:py-16
+            md:px-16
+            md:py-20
+          "
+        >
+          {/* Brillos interiores */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              -left-14
+              top-10
+              h-40
+              w-40
+              rounded-full
+              bg-[#DCECF5]/60
+              blur-2xl
+            "
           />
 
-          <p className="max-w-2xl mx-auto mt-10 text-[#4A141D] text-xl leading-10 font-playfair">
-            El mejor regalo será compartir este día contigo.
-            <br />
-            <br />
-            Si deseas tener un detalle con nosotros, puedes hacerlo mediante una
-            transferencia bancaria.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => setMostrarModal(true)}
+          <div
+            aria-hidden="true"
             className="
-              mt-12
-              bg-[#4A141D]
-              text-[#F4E8DD]
-              px-10
-              py-4
+              pointer-events-none
+              absolute
+              -right-14
+              bottom-6
+              h-40
+              w-40
               rounded-full
-              text-lg
-              shadow-xl
-              hover:scale-105
-              transition
+              bg-[#E8DECD]/45
+              blur-2xl
             "
-          >
-            Ver datos bancarios
-          </button>
-        </div>
-      </motion.div>
+          />
 
-      <AnimatePresence>
-        {mostrarModal && (
-          <motion.div
-            className="
-              fixed inset-0
-              bg-black/60
-              backdrop-blur-md
-              flex items-center justify-center
-              z-[9999]
-              px-5
-            "
-            onClick={() => setMostrarModal(false)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.85, opacity: 0, y: 60 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 60 }}
-              transition={{ duration: 0.35 }}
+          <div className="relative z-10">
+
+
+            <h2
               className="
-                relative
-                w-full
-                max-w-[360px]
-                rounded-[2rem]
-                bg-[#4A141D]
-                text-[#F4E8DD]
-                p-8
-                shadow-[0_30px_80px_rgba(0,0,0,.4)]
+                mt-4
+                font-playfair
+                text-4xl
+                font-medium
+                text-[#294A62]
+                sm:text-5xl
+                md:text-6xl
               "
             >
-              <button
-                type="button"
-                onClick={() => setMostrarModal(false)}
-                className="absolute top-4 right-5 text-3xl leading-none"
-              >
-                ×
-              </button>
+              Con mucho cariño
+            </h2>
 
-              <h3 className="font-playfair text-3xl">Santander</h3>
+            {/* Separador */}
+            <div className="mt-6 flex items-center justify-center gap-3">
+              <span className="h-px w-12 bg-[#B8A98F]" />
 
-              <div className="w-12 h-8 rounded bg-[#E6C15B] mt-6"></div>
+              <span className="font-playfair text-xl text-[#A99576]">
+                ✦
+              </span>
 
-              <p className="tracking-[.18em] text-lg mt-8">
-                1234 5678 9012 3456
-              </p>
+              <span className="h-px w-12 bg-[#B8A98F]" />
+            </div>
 
-              <p className="mt-6 text-sm text-[#F4E8DD]/70">Titular</p>
+            {/* Icono */}
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                rotate: 2,
+              }}
+              transition={{ duration: 0.3 }}
+              className="
+                relative
+                mx-auto
+                mt-10
+                flex
+                h-32
+                w-32
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-[#BDD4E1]
+                bg-gradient-to-br
+                from-[#EDF6FA]
+                to-[#D7E9F3]
+                shadow-[0_15px_35px_rgba(77,118,141,0.16)]
+              "
+            >
+              <Gift
+                size={58}
+                strokeWidth={1.25}
+                className="text-[#638CA5]"
+              />
 
-              <p className="font-playfair">Juan Pérez</p>
-
-              <button
-                type="button"
-                onClick={copiarCuenta}
+              <span
+                aria-hidden="true"
                 className="
-                  w-full
-                  mt-8
-                  bg-[#F4E8DD]
-                  text-[#4A141D]
-                  py-3
-                  rounded-full
-                  font-semibold
+                  absolute
+                  -right-1
+                  top-3
+                  text-lg
+                  text-[#B3A17E]
                 "
               >
-                Copiar número
-              </button>
+                ✦
+              </span>
 
-              {copiado && (
-                <p className="text-center mt-4 text-[#B88A8A]">
-                  Número copiado
-                </p>
-              )}
+              <span
+                aria-hidden="true"
+                className="
+                  absolute
+                  bottom-5
+                  left-1
+                  text-xs
+                  text-[#B3A17E]
+                "
+              >
+                ✦
+              </span>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+            {/* Frase */}
+            <p
+              className="
+                mx-auto
+                mt-10
+                max-w-2xl
+                font-playfair
+                text-xl
+                leading-9
+                text-[#405A69]
+                sm:text-2xl
+                sm:leading-10
+              "
+            >
+              Tu presencia es el regalo más importante para nosotros,
+              pero si deseas obsequiar algo, agradeceremos mucho tu
+              detalle.
+            </p>
+
+            {/* Adorno inferior */}
+            <div
+              aria-hidden="true"
+              className="
+                mx-auto
+                mt-9
+                flex
+                items-center
+                justify-center
+                gap-3
+                text-[#A99576]
+              "
+            >
+              <span className="h-px w-8 bg-[#C2B69E]" />
+              <span className="text-lg">♡</span>
+              <span className="h-px w-8 bg-[#C2B69E]" />
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,60 +1,92 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function Portada() {
   return (
-    <section className="relative w-full h-screen overflow-hidden">
-
-      {/* FOTO */}
+    <section className="relative min-h-[100svh] w-full overflow-hidden bg-[#DCEAF3]">
+      {/* Fotografía de portada */}
       <img
-        src="/portada.png"
-        alt="Allison y David"
-        className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
+        src="/portada.jpg"
+        alt="Bautizo de Liam Samuel Chapa Garabito"
+        className="
+          absolute
+          inset-0
+          h-full
+          w-full
+          object-cover
+          object-center
+        "
       />
 
-      {/* Degradado para mejorar lectura */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent"></div>
+      {/* Degradado inferior para mejorar la lectura */}
+      <div
+        className="
+          absolute
+          inset-0
+          bg-gradient-to-t
+          from-black/75
+          via-black/10
+          to-transparent
+        "
+      />
 
-      {/* Contenido */}
-      <div className="relative z-10 h-full flex flex-col justify-end items-center text-center px-6 pb-24">
-
-        <p className="uppercase tracking-[0.45em] text-white/90 text-sm sm:text-base font-playfair mb-6">
-          Nos Casamos
-        </p>
-
+      {/* Nombre y fecha */}
+      <motion.div
+        initial={{ opacity: 0, y: 35 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 1.2,
+          delay: 0.3,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="
+          relative
+          z-10
+          flex
+          min-h-[100svh]
+          w-full
+          flex-col
+          items-center
+          justify-end
+          px-5
+          pb-14
+          text-center
+          sm:px-8
+          sm:pb-20
+          md:pb-24
+        "
+      >
         <h1
           className="
+            max-w-5xl
             font-cursiveDancing
+            text-5xl
+            leading-[1.05]
             text-white
-            text-6xl
-            sm:text-7xl
-            md:text-8xl
-            lg:text-[7rem]
-            leading-none
-            drop-shadow-2xl
+            drop-shadow-[0_3px_12px_rgba(0,0,0,0.65)]
+            sm:text-6xl
+            md:text-7xl
+            lg:text-8xl
           "
         >
-          Allison & David
+          Liam Samuel
+          <span
+            className="
+              mt-2
+              block
+              font-playfair
+              text-xl
+              font-normal
+              tracking-[0.12em]
+              sm:text-2xl
+              md:text-3xl
+            "
+          >
+            Chapa Garabito
+          </span>
         </h1>
 
-        <div className="w-24 h-px bg-white/70 my-8"></div>
-
-        <div
-          className="
-            px-8
-            py-3
-            rounded-full
-            bg-white/15
-            backdrop-blur-lg
-            border
-            border-white/20
-          "
-        >
-          <p className="font-playfair text-white text-lg sm:text-xl tracking-[0.2em] uppercase">
-            11 · Junio · 2027
-          </p>
-        </div>
-
-      </div>
+      </motion.div>
     </section>
   );
 }
