@@ -295,9 +295,9 @@ const Galeria = () => {
             relative
             mx-auto
             mt-14
-            min-h-[650px]
+            min-h-[850px]
             max-w-4xl
-            sm:min-h-[760px]
+            sm:min-h-[1020px]
             md:min-h-[700px]
           "
         >
@@ -317,7 +317,7 @@ const Galeria = () => {
               duration: 0.9,
               ease: [0.22, 1, 0.36, 1],
             }}
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={{ once: true, amount: 0.2 }}
             whileHover={{
               rotate: 0,
               scale: 1.02,
@@ -397,7 +397,7 @@ const Galeria = () => {
               delay: 0.2,
               ease: [0.22, 1, 0.36, 1],
             }}
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={{ once: true, amount: 0.15 }}
             whileHover={{
               rotate: 0,
               scale: 1.02,
@@ -408,7 +408,7 @@ const Galeria = () => {
               bottom-0
               right-0
               z-20
-              w-[80%]
+              w-[82%]
               overflow-hidden
               rounded-[2rem]
               border-[9px]

@@ -6,6 +6,8 @@ import Confirmacion from "./componentes-encabezado/Confirmacion";
 import Musica from "./componentes-encabezado/musica";
 import Galeria from "./componentes-encabezado/galeria";
 import Itinerario from "./componentes-encabezado/itinerario";
+import PadresYPadrinos from "./componentes-encabezado/familia";
+import FraseFinal from "./componentes-encabezado/frase";
 
 export default function Intinerario() {
   return (
@@ -19,11 +21,16 @@ export default function Intinerario() {
 
       <Itinerario/>
 
+      <PadresYPadrinos/>
+
       <Galeria/>
 
       <Regalos />
 
       <Confirmacion />
+
+      <FraseFinal/>
+    
     </div>
   );
 }
